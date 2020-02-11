@@ -5,7 +5,7 @@ const Database = require('./data/db.js');
 
 const server = express();
 server.get('/', (req, res)=>{
-    res.json({hello: "Web 26"})
+    res.json({hello: "Project 1"})
 })
 
 server.use(express.json())
@@ -40,7 +40,6 @@ server.get(`/api/users/:id`, (req, res) => {
 
 server.post('/api/users', (req, res) => {
   console.log(req.body)
-    // const newHobbit = req.body;
     if (!req.body.name || !req.body.bio){
             res.status(400).json({errorMessage: 'Please provide name and bio for the user.'});
         }    
@@ -53,50 +52,25 @@ server.post('/api/users', (req, res) => {
     
 })
 
-// server.put('/api/users/:id', (req, res) => {
-  
-//     const {id}= req.params;
-//     const {dataChanges} = res.id;
-
-//     if (!dataChanges.id){
-//         res
-//         .status(404)
-//         .json({ message: "The user with the specified ID does not exist." });
-//     } 
-
-//     if (!dataChanges.name && !dataChanges.bio){
-//         res
-//         .status(400)
-//         .json({ errorMessage: "Please provide name and bio for the user." });
-//     }
-//     else Database.update(id, dataChanges)
-//     .then(db => {
-//         res.status(200).json(db);
-//     })
-//     .catch(err => {
-//         console.log(err);
-//         res
-//           .status(500)
-//           .json({ errorMessage: "The user information could not be modified." });
-        
-//       });
-//   })
-
-
-// server.put('./api/users/:id', (req, res)=> {
-//     const updateObject = req.body;
-
-//     Database.update(req.params.id, updateObject).then(obj => {
-//         if (obj){
-//             res.status(200).json(obj);
-//         } else {
-//             res.status(400).json({errorMessage: })
-//         }
-//     })
-// })
+server.put('/api/users/:id', (req, res) => {
+    const updateObject = req.body;
+    Database.update(req.params.id, updateObject)
+    .then(obj => {
+        if (obj){
+            res.status(200).json(obj);
+        } else {
+            res.status(404).json({ errorMessage: "The user with the specified ID does not exist." })
+        }
+    })
+    .catch(error => {
+        console.log(error);
+        res.status(500).json({
+            errorMessage: "The user information could not be modified."
+        });
+      });
+});
 
   server.delete('/api/users/:id', (req, res) => {
-    // const {id}= req.params;
     Database.remove(req.params.id)
     .then(db => {
         if (req.params.id) {
