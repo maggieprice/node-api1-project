@@ -8,6 +8,8 @@ server.get('/', (req, res)=>{
     res.json({hello: "Web 26"})
 })
 
+server.use(express.json())
+
 const port = 5000;
 
 server.listen(port, () => console.log(`\n** API on port ${port} \n`));
@@ -22,18 +24,19 @@ server.get('/api/users', (req, res) => {
     });
 })
 
-// server.get(`/api/users/:${id}`, (req, res) => {
-//     const { id } = req.params;
-   
-//         if (!obj) {
-//             res.status(404).json({ message: "The user with the specified ID does not exist." });
-//         } 
-//        else  Database.findById(id).then(obj => {res.status(200).json(obj); 
-//     }).catch(err => {
-//         console.log(err);
-//         res.status(500).json({ errorMessage: "The user information could not be retrieved." });
-//     })
-// })
+server.get(`/api/users/:id`, (req, res) => {
+    Database.findById(req.params.id)
+   .then(obj =>{
+    if (obj) {res.status(200).json(obj);
+    }
+   else { 
+   res.status(404).json({ message: "The user with the specified ID does not exist." });
+} 
+    }).catch(err => {
+        console.log(err);
+        res.status(500).json({ errorMessage: "The user information could not be retrieved." });
+    })
+})
 
 server.post('/api/users', (req, res) => {
   console.log(req.body)
