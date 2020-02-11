@@ -95,22 +95,22 @@ server.post('/api/users', (req, res) => {
 //     })
 // })
 
-//   server.delete('/api/users/:id', (req, res) => {
-//     const deleteHobbit = req.body; 
-
-//     if (!deleteHobbit.name && !deleteHobbit.bio){
-//         res
-//         .status(404)
-//         .json({ errorMessage: "The user with the specified ID does not exist." });
-//     }
-//     Database.delete(id, deleteHobbit)
-//     .then(db => {
-//         res.status(200).json(db);
-//     })
-//     .catch(err => {
-//         console.log(err);
-//         res
-//           .status(500)
-//           .json({ errorMessage: "The user could not be removed." });
-//     });
-//   });
+  server.delete('/api/users/:id', (req, res) => {
+    // const {id}= req.params;
+    Database.remove(req.params.id)
+    .then(db => {
+        if (req.params.id) {
+            res.status(200).json({Message:  "The user has been deleted.", db})
+        } else {
+            res
+            .status(404)
+            .json({ errorMessage: "The user with the specified ID does not exist." });
+        }
+    })
+    .catch(err => {
+        console.log(err);
+        res
+          .status(500)
+          .json({ errorMessage: "The user could not be removed." });
+    });
+  });
